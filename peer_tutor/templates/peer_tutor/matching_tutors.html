@@ -1,0 +1,37 @@
+<!-- templates/peer_tutor/matching_tutors.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matching Tutors</title>
+</head>
+<body>
+
+<h2>Matching Tutors</h2>
+
+{% if message %}
+    <div class="alert alert-info">
+        {{ message|join:", " }}
+    </div>
+{% endif %}
+
+{% for subject, tutors in subject_tutor_mapping.items %}
+    <h3>{{ subject }}</h3>
+    
+    {% if tutors %}
+        <ul>
+            {% for tutor in tutors %}
+                    <p>{{ tutor.user.first_name }}</p>
+                    <p><a href="{% url 'tutor:availablility_calendar' tutor.id %}"> Available Slots</a></p>
+
+                    <a href="{% url 'tutor:available_slots' tutor.id %}">Book Session</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tutors available for this subject.</p>
+    {% endif %}
+{% endfor %}
+
+</body>
+</html>

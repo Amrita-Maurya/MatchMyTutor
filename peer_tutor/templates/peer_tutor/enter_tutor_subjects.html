@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter Subjects You Can Teach</title>
+</head>
+<body>
+    <h2>Subjects You Can Teach</h2>
+
+    <form method="post", action="{% url 'tutor:enter_tutor_subjects' %}">
+        {% csrf_token %}
+        
+            <label for="new_subject">Add New Subject:</label>
+            <input type="text" id="new_subject" name="new_subject" required>
+        
+        <button type="submit">Add Subject</button>
+    </form>
+
+    <h3>Your Subjects:</h3>
+    {% if subjects_list %}
+        <ul>
+            {% for subject in subjects_list %}
+                <li>{{ subject }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No subjects entered yet.</p>
+    {% endif %}
+
+    <p><a href="{% url 'tutor:user_profile' %}">Go to Your Profile</a></p> 
+    <p> <a href="{% url 'tutor:tutor_calendar' %}">Your Tutoring Calendar</a></p>
+    <p> <a href="{% url 'tutor:set_availability' %}">Set Your Availability Slots</a></p>
+    <p><a href="{% url 'tutor:manage_bookings'  %}">Manage Your Bookings</a></p>
+</div>
+
+</body>
+</html>

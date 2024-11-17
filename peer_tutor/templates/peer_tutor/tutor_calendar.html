@@ -1,0 +1,19 @@
+<!-- templates/peer_tutor/tutor_calendar.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutor Calendar</title>
+</head>
+<body>
+
+<h2>Booked Slots Calendar</h2>
+
+<div>
+    {{ calendar|safe }}  <!-- Render the HTML calendar -->
+</div>
+
+<a href="{% url 'tutor:set_availability' %}">Set Availability</a>
+
+</body>
+</html>

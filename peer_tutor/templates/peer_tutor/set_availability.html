@@ -1,0 +1,40 @@
+<!-- templates/tutoring/set_availability.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set Availability</title>
+</head>
+<body>
+
+<h2>Set Your Availability</h2>
+
+<form method="post", action="{% url 'tutor:set_availability' %}">
+    {% csrf_token %}
+    <label for="date">Date:</label>
+    <input type="date" name="date" id="date" required><br>
+
+    
+
+    <label for="start_time">Start Time:</label>
+    <input type="time" name="start_time" id="start_time" required><br>
+
+    <label for="end_time">End Time:</label>
+    <input type="time" name="end_time" id="end_time" required><br>
+
+    <button type="submit">Save Availability</button>
+</form>
+
+<h3>Your Current Availability:</h3>
+<ul>
+    {% for availability in availabilities %}
+        <li>{{ availability.date }}: {{ availability.start_time }} to {{ availability.end_time }}</li>
+    {% empty %}
+        <li>No availability set.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'tutor:manage_bookings' %}">Back to Manage Bookings</a>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile</title>
+</head>
+<body>
+    
+        <form method="post" action="{% url 'tutor:user_profile' %}"> 
+        <h2>Your Profile</h2>
+        <p>Welcome to your profile! You can navigate to the following pages:</p>
+    
+        <a href="{% url 'tutor:enter_tutor_subjects' %}" >Go to Tutor Page</a>
+        <a href="{% url 'tutor:enter_subjects' %}" >Go to Student Page</a>
+        
+    </form>
+
+        
+
+</body>
+</html>

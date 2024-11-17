@@ -1,0 +1,31 @@
+<!-- templates/peer_tutor/availability_calendar.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ tutor.user.username }}'s Availability Calendar</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        
+        }
+    </style>
+</head>
+<body>
+
+<h2>{{ tutor.user.username }}'s Availability Calendar for {{ month }}/{{ year }}</h2>
+
+<div>
+    {{ calendar|safe }}  <!-- Render the HTML calendar -->
+</div>
+
+
+
+</body>
+</html>
