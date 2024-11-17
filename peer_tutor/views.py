@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import StudentProfile, Tutor, Slot, Booking, Event, Availability
+from .models import StudentProfile, Tutor, Slot, Booking,  Availability
 from django.utils import timezone
 import calendar
-from calendar import HTMLCalendar
-from django.http import HttpResponse
+
+
  
 
 
@@ -57,6 +57,14 @@ def login_view(request):
 def user_profile(request):
     return render(request, 'peer_tutor/user_profile.html')
 
+def tutor_page(request):
+    return render(request, 'peer_tutor/tutor_page.html')
+
+
+def student_page(request):
+    return render(request, 'peer_tutor/student_page.html')
+
+
 def enter_subjects(request):
     student_profile, created = StudentProfile.objects.get_or_create(user=request.user)
 
@@ -103,12 +111,6 @@ def enter_tutor_subjects(request):
         'subjects_list': subjects_list,
     })
 
-
-
-# views.py
-from django.shortcuts import render
-from .models import StudentProfile, Tutor
-
 def matching_tutors(request):
     student_profile, created = StudentProfile.objects.get_or_create(user=request.user)
     
@@ -137,8 +139,6 @@ def matching_tutors(request):
     })
     
 
-
-
 def availability_calendar(request, tutor_id):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     now = timezone.now()
@@ -152,15 +152,14 @@ def availability_calendar(request, tutor_id):
     # Create a dictionary for available slots with times
     available_slots = {}
     for availability in availabilities:
-        if availability not in booked_slots:
-            date = availability.date
+        date = availability.date
         if date not in available_slots:
-            available_slots[date] = []
-        available_slots[date].append({
-            'start_time': availability.start_time,
-            'end_time': availability.end_time,
-        })
+            if date not in booked_slots:
+                available_slots[date] = []
+                available_slots[date].append({'start_time': availability.start_time.strftime("%H:%M"),'end_time': availability.end_time.strftime("%H:%M"),})
         
+
+            
 
     # Create an HTML calendar
     html_calendar = calendar.HTMLCalendar(firstweekday=0)  # Monday as the first day of the week
@@ -247,35 +246,6 @@ def set_availability(request):
     })
 
 
-        
-
-class EventCalendar(HTMLCalendar):
-    def __init__(self, year=None, month=None, events=None):
-        super().__init__()
-        self.year = year
-        self.month = month
-        self.events = events or {}
-
-    def formatday(self, day, weekday):
-        if day == 0:
-            return "<td></td>"  # Empty cell for days outside the month
-        
-        day_events = self.events.get(day, [])
-        event_links = ''.join([f"<li>{event.booking.slot.tutor.user.username}: {event.start_time.strftime('%H:%M')} - <a href='#'>Details</a></li>" for event in day_events])
-        
-        return f"<td>{day}<ul>{event_links}</ul></td>"
-
-    def formatmonth(self):
-        slots_by_day = {}
-        for event in self.events:
-            day = event.start_time.day
-            if day not in slots_by_day:
-                slots_by_day[day] = []
-            slots_by_day[day].append(event)
-
-        self.events = slots_by_day
-        return super().formatmonth(self.year, self.month)
-
 
 
 
@@ -289,10 +259,6 @@ def student_bookings(request):
 
 
 
-# views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Tutor, Slot, Booking, Availability
-from django.utils import timezone
 
 def available_slots(request, tutor_id):
     print(f"Requested Tutor ID: {tutor_id}")
@@ -324,9 +290,7 @@ def book_slot(request):
     if request.method == 'POST':
         start_time_str = request.POST.get('start_time')
         end_time_str = request.POST.get('end_time')
-        print("Start Time:", start_time_str)
-        print("End Time:", end_time_str)
-        # Convert strings to datetime objects
+
         try:
             start_time = timezone.datetime.fromisoformat(start_time_str)
             end_time = timezone.datetime.fromisoformat(end_time_str)
@@ -341,12 +305,9 @@ def book_slot(request):
             if not slot.is_booked:
                 booking = Booking(student=request.user, slot=slot)
                 booking.save()
-
-                # Mark the slot as booked
                 slot.is_booked = True
                 slot.save()
 
-                return redirect('tutor:student_calendar')  # Redirect to student's calendar or bookings page
             else:
                 return redirect('tutor:available_slots', tutor_id=slot.tutor.id)  # Redirect if already booked
         
@@ -377,8 +338,8 @@ def tutor_calendar(request):
         if date not in slots_by_date:
             slots_by_date[date] = []
         slots_by_date[date].append({
-            'start_time': slot.start_time.time(),
-            'end_time': slot.end_time.time(),
+            'start_time': slot.start_time.strftime("%H:%M"),
+            'end_time': slot.end_time.strftime("%H:%M"),
         })
 
     # Create an HTML calendar
@@ -421,8 +382,8 @@ def student_calendar(request):
         if date not in slots_by_date:
             slots_by_date[date] = []
         slots_by_date[date].append({
-            'start_time': booking.slot.start_time.time(),
-            'end_time': booking.slot.end_time.time(),
+            'start_time': booking.slot.start_time.strftime("%H:%M"),
+            'end_time': booking.slot.end_time.strftime("%H:%M"),
             'tutor_name': booking.slot.tutor.user.first_name  # Include tutor information if needed
         })
 

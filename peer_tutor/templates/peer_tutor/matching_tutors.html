@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Matching Tutors</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/matching_tutors.css' %}"> <!-- Link to the CSS file -->
 </head>
 <body>
 
@@ -15,23 +18,29 @@
     </div>
 {% endif %}
 
-{% for subject, tutors in subject_tutor_mapping.items %}
-    <h3>{{ subject }}</h3>
-    
-    {% if tutors %}
-        <ul>
-            {% for tutor in tutors %}
-                    <p>{{ tutor.user.first_name }}</p>
-                    <p><a href="{% url 'tutor:availablility_calendar' tutor.id %}"> Available Slots</a></p>
+<div class="tutor-list">
+    {% for subject, tutors in subject_tutor_mapping.items %}
+        <h3>{{ subject }}</h3>
+        
+        {% if tutors %}
+            <ul>
+                {% for tutor in tutors %}
+                    <li class="tutor-card">
+                        <p class="tutor-name">{{ tutor.user.first_name }} </p>
+                        <p><a href="{% url 'tutor:availablility_calendar' tutor.id %}">Available Slots</a></p>
+                        <p><a href="{% url 'tutor:available_slots' tutor.id %}">Book Session</a></p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tutors available for this subject.</p>
+        {% endif %}
+    {% endfor %}
+</div>
 
-                    <a href="{% url 'tutor:available_slots' tutor.id %}">Book Session</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tutors available for this subject.</p>
-    {% endif %}
-{% endfor %}
+<form action="{% url 'tutor:student_page' %}" method="get">
+    <button type="submit" class="back-button">Back</button>
+</form>
 
 </body>
 </html>

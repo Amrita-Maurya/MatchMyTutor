@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Set Availability</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/set_availability.css' %}">
 </head>
 <body>
 
@@ -34,7 +36,9 @@
     {% endfor %}
 </ul>
 
-<a href="{% url 'tutor:manage_bookings' %}">Back to Manage Bookings</a>
+<form action="{% url 'tutor:tutor_page' %}" method="get">
+    <button type="submit" class="back-button">Back</button>
+</form>
 
 </body>
 </html>

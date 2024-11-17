@@ -1,0 +1,62 @@
+/* available_slots.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px; /* Add padding around the body */
+    background-color: #e3f2fd; /* Light background */
+}
+
+h2 {
+    color: #0d47a1; /* Dark blue for headings */
+    margin-bottom: 20px; /* Space below heading */
+}
+
+table {
+    width: 100%; /* Full width table */
+    border-collapse: collapse; /* Collapse borders */
+    margin-bottom: 20px; /* Space below table */
+}
+
+th, td {
+    border: 1px solid #ccc; /* Light border for table cells */
+    padding: 10px; /* Padding inside cells */
+    text-align: center; /* Center text in cells */
+}
+
+th {
+    background-color: #2196f3; /* Bright blue for header background */
+    color: white; /* White text for header */
+}
+
+td {
+    vertical-align: middle; /* Center content vertically in cells */
+}
+
+button {
+    background-color: #28a745; /* Green button for booking */
+    color: white;
+    padding: 8px 15px; /* Padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.back-button {
+    background-color: #2196f3; /* Bright blue for back button */
+    color: white;
+    padding: 10px 20px; /* Padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+}
+
+.back-button:hover {
+    background-color: #1e88e5; /* Darker blue on hover */
+}

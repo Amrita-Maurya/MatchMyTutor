@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/user_profile.css' %}">
 </head>
 <body>
     
@@ -10,12 +12,10 @@
         <h2>Your Profile</h2>
         <p>Welcome to your profile! You can navigate to the following pages:</p>
     
-        <a href="{% url 'tutor:enter_tutor_subjects' %}" >Go to Tutor Page</a>
-        <a href="{% url 'tutor:enter_subjects' %}" >Go to Student Page</a>
+        <a href="{% url 'tutor:tutor_page' %}" >Go to Tutor Page</a>
+        <a href="{% url 'tutor:student_page' %}" >Go to Student Page</a>
         
-    </form>
-
-        
+        </form>
 
 </body>
 </html>

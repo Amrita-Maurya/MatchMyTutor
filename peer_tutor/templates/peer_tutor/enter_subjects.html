@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Enter Subjects Needed</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/enter_subjects.css' %}">
+
     
 </head>
 <body>
 
-    <h2>Subjects You Need Help With</h2>
+    <div class="container">
+        <h2>Subjects You Need Help With</h2>
 
     <form method="post", action="{% url 'tutor:enter_subjects' %}">
         {% csrf_token %}
@@ -28,16 +32,9 @@
     {% else %}
         <p>No subjects entered yet.</p>
     {% endif %}
-
-    <p><a href="{% url 'tutor:user_profile' %}">Go to Your Profile</a></p>
-    <p><a href="{% url 'tutor:matching_tutors' %}">Tutors Who Can Help You</a></p>
-    <p> <a href="{% url 'tutor:student_calendar' %}">Your Student Calendar</a></p>
-    <p><a href="{% url 'tutor:student_bookings'  %}">Your Bookings</a></p>
-    
-
-
-
-    
-
+    <form action="{% url 'tutor:student_page' %}" method="get">
+        <button type="submit" class="back-button">Back</button>
+    </form>
+    </div>
 </body>
 </html>

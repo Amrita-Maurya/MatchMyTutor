@@ -1,31 +1,23 @@
-<!-- templates/peer_tutor/availability_calendar.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ tutor.user.username }}'s Availability Calendar</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        
-        }
-    </style>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/availability_calendar.css' %}">
 </head>
 <body>
 
-<h2>{{ tutor.user.username }}'s Availability Calendar for {{ month }}/{{ year }}</h2>
+<h2>{{ tutor.user.first_name }}'s Availability Calendar</h2>
 
 <div>
-    {{ calendar|safe }}  <!-- Render the HTML calendar -->
+    {{ calendar|safe }}  
 </div>
 
-
+<form action="{% url 'tutor:matching_tutors' %}" method="get">
+    <button type="submit" class="back-button">Back</button>
+</form>
 
 </body>
 </html>

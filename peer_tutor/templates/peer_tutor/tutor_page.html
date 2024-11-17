@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutor Page</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/tutor_page.css' %}"> 
+</head>
+<body>
+
+<div class="container">
+    <h2>Welcome Tutor</h2>
+
+    <p>Choose an option below to proceed:</p>
+
+    <ul>
+        <li><a href="{% url 'tutor:enter_tutor_subjects' %}">Enter Subjects You Can Teach</a></li>
+        <li><a href="{% url 'tutor:tutor_calendar' %}">Your Tutoring Calendar</a></li>
+        <li><a href="{% url 'tutor:set_availability' %}">Set Your Availability Slots</a></li>
+        <li><a href="{% url 'tutor:user_profile' %}">Back to Profile</a></li> 
+    </ul>
+</div>
+
+</body>
+</html>

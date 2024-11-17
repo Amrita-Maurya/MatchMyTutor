@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Enter Subjects You Can Teach</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/enter_tutor_subjects.css' %}">
+
 </head>
 <body>
-    <h2>Subjects You Can Teach</h2>
+    <div class="container">
+        <h2>Subjects You Can Teach</h2>
 
     <form method="post", action="{% url 'tutor:enter_tutor_subjects' %}">
         {% csrf_token %}
@@ -26,11 +30,10 @@
     {% else %}
         <p>No subjects entered yet.</p>
     {% endif %}
-
-    <p><a href="{% url 'tutor:user_profile' %}">Go to Your Profile</a></p> 
-    <p> <a href="{% url 'tutor:tutor_calendar' %}">Your Tutoring Calendar</a></p>
-    <p> <a href="{% url 'tutor:set_availability' %}">Set Your Availability Slots</a></p>
-    <p><a href="{% url 'tutor:manage_bookings'  %}">Manage Your Bookings</a></p>
+    <form action="{% url 'tutor:tutor_page' %}" method="get">
+        <button type="submit" class="back-button">Back</button>
+    </form>
+    </div>
 </div>
 
 </body>

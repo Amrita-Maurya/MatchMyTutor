@@ -1,0 +1,35 @@
+/* user_profile.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e3f2fd; /* Light background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+h2 {
+    color: #0d47a1; /* Dark blue for headings */
+}
+
+p {
+    text-align: center; /* Center text for paragraphs */
+}
+
+a {
+    display: inline-block; /* Make links block elements */
+    background-color: #2196f3; /* Bright blue for links */
+    color: white;
+    padding: 10px 20px; /* Padding for buttons */
+    border-radius: 5px;
+    text-decoration: none; /* Remove underline */
+    margin: 10px 0; /* Space between links */
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #1e88e5; /* Darker blue on hover */
+}

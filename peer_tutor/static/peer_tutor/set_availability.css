@@ -1,0 +1,71 @@
+/* set_availability.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px; /* Add padding around the body */
+    background-color: #e3f2fd; /* Light background */
+}
+
+h2 {
+    color: #0d47a1; /* Dark blue for headings */
+    margin-bottom: 20px; /* Space below heading */
+}
+
+form {
+    margin-bottom: 20px; /* Space below form */
+}
+
+label {
+    display: block; /* Make label block elements */
+    margin-bottom: 5px; /* Space below label */
+}
+
+input[type="date"],
+input[type="time"] {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px; /* Padding inside input fields */
+    margin-bottom: 15px; /* Space below input fields */
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Light border */
+}
+
+button {
+    background-color: #28a745; /* Green button for saving availability */
+    color: white;
+    padding: 10px 20px; /* Padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+h3 {
+    color: #0d47a1; /* Dark blue for subheadings */
+}
+
+ul {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+}
+
+li {
+    margin-bottom: 10px; /* Space between list items */
+}
+
+.back-button {
+    background-color: #2196f3; /* Bright blue for back button */
+    color: white;
+    padding: 10px 20px; /* Padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+}
+
+.back-button:hover {
+    background-color: #1e88e5; /* Darker blue on hover */
+}

@@ -1,19 +1,22 @@
-<!-- templates/peer_tutor/student_calendar.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ student.username }}'s Calendar</title>
+    <title>Your Study Sessions Calendar</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/student_calendar.css' %}">
 </head>
 <body>
 
-<h2>{{ student.username }}'s Calendar</h2>
+<h2>Your Study Sessions Calendar</h2>
 
 <div>
-    {{ calendar|safe }}  <!-- Render the HTML calendar -->
+    {{ calendar|safe }}  
 </div>
 
-<a href="{% url 'tutor:available_slots' student.id %}">Book More Slots</a>
+<form action="{% url 'tutor:student_page' %}" method="get">
+    <button type="submit" class="back-button">Back</button>
+</form>
 
 </body>
 </html>

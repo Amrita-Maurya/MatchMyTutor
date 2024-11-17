@@ -1,0 +1,67 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e3f2fd; /* Light background */
+}
+
+.welcome {
+    background: linear-gradient(135deg, #0d47a1, #1565c0); /* Gradient from dark blue to medium blue */
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.welcome h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.welcome p {
+    font-size: 1.2em;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #2196f3; /* Bright blue */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #1e88e5; /* Slightly darker blue on hover */
+}
+
+.features {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.features h2 {
+    text-align: center;
+    color: #0d47a1; /* Dark blue for headings */
+}
+
+.feature {
+    background-color: #bbdefb; /* Light blue for feature boxes */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.feature h3 {
+    margin-top: 0;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1565c0; /* Medium blue for footer */
+    color: white;
+}

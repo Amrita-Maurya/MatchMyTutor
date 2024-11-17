@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Available Slots for {{ tutor.name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peer_tutor/student_calendar.css' %}">
 </head>
 <body>
 
-<h2>Available Slots for {{ tutor.name }}</h2>
+<h2>Available Slots for {{ tutor.user.first_name }}</h2>
 
 <table border="1">
     <tr>
@@ -34,7 +36,9 @@
     {% endfor %}
 </table>
 
-<a href="{% url 'tutor:set_availability' %}">Set Availability</a>
+<form action="{% url 'tutor:matching_tutors' %}" method="get">
+    <button type="submit" class="back-button">Back</button>
+</form>
 
 </body>
 </html>
