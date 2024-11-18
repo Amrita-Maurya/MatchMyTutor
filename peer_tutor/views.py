@@ -138,6 +138,10 @@ def matching_tutors(request):
         'subject_tutor_mapping': subject_tutor_mapping,
     })
     
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+from .models import Tutor, Availability, Slot
+import calendar
 
 def availability_calendar(request, tutor_id):
     tutor = get_object_or_404(Tutor, id=tutor_id)
@@ -148,18 +152,33 @@ def availability_calendar(request, tutor_id):
     # Fetch tutor's availability and booked slots
     availabilities = Availability.objects.filter(tutor=tutor)
     booked_slots = Slot.objects.filter(tutor=tutor, is_booked=True)
-    
+
+    # Create a set of booked time ranges for quick lookup
+    booked_times = set()
+    for slot in booked_slots:
+        booked_times.add((slot.start_time, slot.end_time))  # Store full datetime objects
+
     # Create a dictionary for available slots with times
     available_slots = {}
+    
     for availability in availabilities:
         date = availability.date
-        if date not in available_slots:
-            if date not in booked_slots:
-                available_slots[date] = []
-                available_slots[date].append({'start_time': availability.start_time.strftime("%H:%M"),'end_time': availability.end_time.strftime("%H:%M"),})
         
-
-            
+        # Combine date with availability start and end times
+        slot_start = timezone.datetime.combine(date, availability.start_time)
+        slot_end = timezone.datetime.combine(date, availability.end_time)
+        if slot_start.tzinfo is None:
+            slot_start = timezone.make_aware(slot_start)
+        if slot_end.tzinfo is None:
+            slot_end = timezone.make_aware(slot_end)
+        # Check if this slot is already booked
+        if not any(start < slot_end and end > slot_start for start, end in booked_times):
+            if date not in available_slots:
+                available_slots[date] = []
+            available_slots[date].append({
+                'start_time': slot_start.strftime("%H:%M"),  # Format as hr:min
+                'end_time': slot_end.strftime("%H:%M"),
+            })
 
     # Create an HTML calendar
     html_calendar = calendar.HTMLCalendar(firstweekday=0)  # Monday as the first day of the week
@@ -172,7 +191,7 @@ def availability_calendar(request, tutor_id):
         time_slots_display = '<br> '.join([f"{slot['start_time']} - {slot['end_time']}" for slot in slots])
         month_calendar = month_calendar.replace(
             f'>{date.day}<',
-            f' >{date.day} <br> {time_slots_display}<'
+            f' style="background-color: lightgreen;">{date.day}<br>{time_slots_display}<'
         )
 
     return render(request, 'peer_tutor/availability_calendar.html', {
@@ -246,7 +265,7 @@ def set_availability(request):
     })
 
 
-
+    
 
 
 def student_bookings(request):
@@ -258,10 +277,7 @@ def student_bookings(request):
     })
 
 
-
-
 def available_slots(request, tutor_id):
-    print(f"Requested Tutor ID: {tutor_id}")
     tutor = get_object_or_404(Tutor, id=tutor_id)
     
     # Fetch all availability entries for the tutor
@@ -286,6 +302,10 @@ def available_slots(request, tutor_id):
     })
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from .models import Slot, Booking
+
 def book_slot(request):
     if request.method == 'POST':
         start_time_str = request.POST.get('start_time')
@@ -299,6 +319,7 @@ def book_slot(request):
 
         # Fetch the corresponding slot
         try:
+            # Adjust this query to ensure it fetches the correct slot
             slot = get_object_or_404(Slot, start_time=start_time, end_time=end_time)
 
             # Check if the slot is still available before booking
@@ -307,13 +328,13 @@ def book_slot(request):
                 booking.save()
                 slot.is_booked = True
                 slot.save()
-
+                # Optionally redirect to a confirmation page or available slots page
+                return redirect('tutor:student_calendar')
             else:
                 return redirect('tutor:available_slots', tutor_id=slot.tutor.id)  # Redirect if already booked
         
         except Slot.DoesNotExist:
             return redirect('tutor:available_slots', tutor_id=request.user.id)  # Redirect if slot does not exist
-        
 
     return redirect('tutor:available_slots', tutor_id=request.user.id)  # Redirect if not POST
 
