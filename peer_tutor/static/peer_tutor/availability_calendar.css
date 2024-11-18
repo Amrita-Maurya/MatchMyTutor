@@ -1,65 +1,63 @@
-
-/* student_calendar.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e3f2fd; /* Light background */
+    background-color: #e3f2fd; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center content vertically */
-    height: 100vh; /* Full viewport height */
+    justify-content: center; 
+    height: 100vh; 
 }
 
 h2 {
-    color: #0d47a1; /* Dark blue for headings */
-    margin-bottom: 20px; /* Space below heading */
+    color: #0d47a1; 
+    margin-bottom: 20px; 
 }
 
 .calendar-container {
-    width: 80%; /* Set calendar container width */
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    width: 80%; 
+    overflow-x: auto; 
 }
 
 table {
-    width: 100%; /* Set table width */
-    border-collapse: collapse; /* Collapse borders */
+    width: 100%; 
+    border-collapse: collapse; 
 }
 
 th, td {
-    border: 1px solid #ccc; /* Light border for table cells */
-    padding: 10px; /* Padding inside cells */
-    text-align: center; /* Center text in cells */
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    text-align: center; 
 }
 
 td {
-    vertical-align: top; /* Align text to the top of the cell */
+    vertical-align: top; 
 }
 
 .booked-slot {
-    background-color: lightgreen; /* Highlight booked slots */
-    border-radius: 10px; /* Rounded corners for booked slots */
-    padding: 5px; /* Padding inside booked slots */
+    background-color: lightgreen; 
+    border-radius: 10px; 
+    padding: 5px; 
 }
 
-/* Style for time slots to make them more readable */
+
 .time-slot {
-    display: block; /* Make time slots block elements */
-    margin-bottom: 5px; /* Space between time slots */
+    display: block; 
+    margin-bottom: 5px; 
 }
 
 .back-button {
-    background-color: #2196f3; /* Bright blue for button */
+    background-color: #2196f3; 
     color: white;
-    padding: 10px 20px; /* Padding for button */
+    padding: 10px 20px; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 .back-button:hover {
-    background-color: #1e88e5; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
+    background-color: #1e88e5; 
+    transform: translateY(-2px); 
 }

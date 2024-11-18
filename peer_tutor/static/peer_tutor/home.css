@@ -1,13 +1,12 @@
-/* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e3f2fd; /* Light background */
+    background-color: #e3f2fd; 
 }
 
 .welcome {
-    background: linear-gradient(135deg, #0d47a1, #1565c0); /* Gradient from dark blue to medium blue */
+    background: linear-gradient(135deg, #0d47a1, #1565c0); 
     color: white;
     text-align: center;
     padding: 50px 20px;
@@ -24,7 +23,7 @@ body {
 
 .btn {
     display: inline-block;
-    background-color: #2196f3; /* Bright blue */
+    background-color: #2196f3; 
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -33,7 +32,7 @@ body {
 }
 
 .btn:hover {
-    background-color: #1e88e5; /* Slightly darker blue on hover */
+    background-color: #1e88e5; 
 }
 
 .features {
@@ -44,11 +43,11 @@ body {
 
 .features h2 {
     text-align: center;
-    color: #0d47a1; /* Dark blue for headings */
+    color: #0d47a1; 
 }
 
 .feature {
-    background-color: #bbdefb; /* Light blue for feature boxes */
+    background-color: #bbdefb; 
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-bottom: 20px;
@@ -62,6 +61,6 @@ body {
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #1565c0; /* Medium blue for footer */
+    background-color: #1565c0; 
     color: white;
 }

@@ -1,27 +1,26 @@
-/* login.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e3f2fd; /* Light background */
+    background-color: #e3f2fd; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
 }
 
 h2 {
-    color: #0d47a1; /* Dark blue for headings */
+    color: #0d47a1; 
 }
 
 form {
-    background-color: white; /* White background for the form */
+    background-color: white; 
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-width: 400px; /* Limit form width */
-    width: 100%; /* Responsive width */
+    max-width: 400px; 
+    width: 100%; 
 }
 
 label {
@@ -31,20 +30,20 @@ label {
 
 input[type="email"],
 input[type="password"] {
-    width: calc(100% - 20px); /* Full width minus padding */
+    width: calc(100% - 20px); 
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 5px;
-    border: 1px solid #ccc; /* Light border */
+    border: 1px solid #ccc; 
 }
 
 input[type="email"]:focus,
 input[type="password"]:focus {
-    border-color: #2196f3; /* Highlight border on focus */
+    border-color: #2196f3; 
 }
 
 .btn {
-    background-color: #2196f3; /* Bright blue for button */
+    background-color: #2196f3; 
     color: white;
     padding: 10px;
     border: none;
@@ -54,13 +53,13 @@ input[type="password"]:focus {
 }
 
 .btn:hover {
-    background-color: #1e88e5; /* Darker blue on hover */
+    background-color: #1e88e5; 
 }
 
 p {
-    text-align: center; /* Center text for paragraphs */
+    text-align: center; 
 }
 
 a {
-    color: #1565c0; /* Medium blue for links */
+    color: #1565c0; 
 }

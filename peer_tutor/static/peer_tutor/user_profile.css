@@ -1,35 +1,34 @@
-/* user_profile.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e3f2fd; /* Light background */
+    background-color: #e3f2fd; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
 }
 
 h2 {
-    color: #0d47a1; /* Dark blue for headings */
+    color: #0d47a1; 
 }
 
 p {
-    text-align: center; /* Center text for paragraphs */
+    text-align: center; 
 }
 
 a {
-    display: inline-block; /* Make links block elements */
-    background-color: #2196f3; /* Bright blue for links */
+    display: inline-block; 
+    background-color: #2196f3; 
     color: white;
-    padding: 10px 20px; /* Padding for buttons */
+    padding: 10px 20px; 
     border-radius: 5px;
-    text-decoration: none; /* Remove underline */
-    margin: 10px 0; /* Space between links */
+    text-decoration: none; 
+    margin: 10px 0; 
     transition: background-color 0.3s ease;
 }
 
 a:hover {
-    background-color: #1e88e5; /* Darker blue on hover */
+    background-color: #1e88e5; 
 }

@@ -1,4 +1,3 @@
-<!-- templates/peer_tutor/matching_tutors.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
     <title>Matching Tutors</title>
     
     {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/matching_tutors.css' %}"> <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="{% static 'peer_tutor/matching_tutors.css' %}"> 
 </head>
 <body>
 
@@ -27,7 +26,7 @@
                 {% for tutor in tutors %}
                     <li class="tutor-card">
                         <p class="tutor-name">{{ tutor.user.first_name }} </p>
-                        <p><a href="{% url 'tutor:availablility_calendar' tutor.id %}">Available Slots</a></p>
+                        <a href="{% url 'tutor:availablility_calendar' tutor.id %}">Available Slots</a></p>
                         <p><a href="{% url 'tutor:available_slots' tutor.id %}">Book Session</a></p>
                     </li>
                 {% endfor %}

@@ -1,71 +1,70 @@
-/* set_availability.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px; /* Add padding around the body */
-    background-color: #e3f2fd; /* Light background */
+    padding: 20px; 
+    background-color: #e3f2fd; 
 }
 
 h2 {
-    color: #0d47a1; /* Dark blue for headings */
-    margin-bottom: 20px; /* Space below heading */
+    color: #0d47a1; 
+    margin-bottom: 20px; 
 }
 
 form {
-    margin-bottom: 20px; /* Space below form */
+    margin-bottom: 20px; 
 }
 
 label {
-    display: block; /* Make label block elements */
-    margin-bottom: 5px; /* Space below label */
+    display: block; 
+    margin-bottom: 5px; 
 }
 
 input[type="date"],
 input[type="time"] {
-    width: calc(100% - 20px); /* Full width minus padding */
-    padding: 10px; /* Padding inside input fields */
-    margin-bottom: 15px; /* Space below input fields */
+    width: calc(100% - 20px); 
+    padding: 10px; 
+    margin-bottom: 15px; 
     border-radius: 5px;
-    border: 1px solid #ccc; /* Light border */
+    border: 1px solid #ccc; 
 }
 
 button {
-    background-color: #28a745; /* Green button for saving availability */
+    background-color: #28a745; 
     color: white;
-    padding: 10px 20px; /* Padding for button */
+    padding: 10px 20px; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838; 
 }
 
 h3 {
-    color: #0d47a1; /* Dark blue for subheadings */
+    color: #0d47a1; 
 }
 
 ul {
-    list-style-type: none; /* Remove default list styling */
-    padding: 0; /* Remove padding */
+    list-style-type: none; 
+    padding: 0; 
 }
 
 li {
-    margin-bottom: 10px; /* Space between list items */
+    margin-bottom: 10px; 
 }
 
 .back-button {
-    background-color: #2196f3; /* Bright blue for back button */
+    background-color: #2196f3; 
     color: white;
-    padding: 10px 20px; /* Padding for button */
+    padding: 10px 20px; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 .back-button:hover {
-    background-color: #1e88e5; /* Darker blue on hover */
+    background-color: #1e88e5; 
 }

@@ -18,8 +18,6 @@ urlpatterns = [
     path('tutor/set-availability/', views.set_availability, name='set_availability'),
     path('availability/<int:tutor_id>/', views.available_slots, name='available_slots'),
     path('book_slot/', views.book_slot, name='book_slot'),
-    path('student/bookings/', views.student_bookings, name='student_bookings'),
-    path('manage-bookings/', views.manage_bookings, name='manage_bookings'),
     path('tutor-calendar/', views.tutor_calendar, name='tutor_calendar'),  # Tutor calendar view
     path('student/calendar/', views.student_calendar, name='student_calendar'),  # Student calendar view
 ]
