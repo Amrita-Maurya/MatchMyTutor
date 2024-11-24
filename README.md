@@ -1,4 +1,4 @@
-## Tutor and Student Booking System
+## MatchMyTutor : Tutor and Student Booking System
 
 ## Overview
 
