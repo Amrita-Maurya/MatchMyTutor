@@ -3,6 +3,11 @@
 ## Overview
 
 The Tutor and Student Booking System is a web application designed to facilitate the scheduling and management of tutoring sessions between tutors and students. This application allows students to find available tutors, view their schedules, and book sessions seamlessly. Tutors can manage their availability and track bookings efficiently.
+This app serves two roles for each profile 
+1. Student
+2. Tutor
+A person can login and teach the other students who need help
+ 
 
 ## Features
 
