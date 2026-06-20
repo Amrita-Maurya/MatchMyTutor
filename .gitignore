@@ -51,8 +51,3 @@ htmlcov/
 .pytest_cache/
 .tox/
 
-# ── Replit internals ────────────────────────────────────────────────────────────
-.replit
-replit.nix
-.upm/
-.config/
