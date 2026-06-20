@@ -1,0 +1,126 @@
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Welcome, {{ request.user.first_name|default:request.user.email }}!</h1>
+    <p>Here's what's happening with your account.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;">
+
+    <!-- ── Tutor Section ─────────────────────────────────────────────────── -->
+    {% if tutor_profile %}
+    <div>
+      <h2 class="section-title">📚 As a Tutor</h2>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-value">{{ tutor_subject_count|default:"0" }}</span>
+          <span class="stat-label">Subjects</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ review_count|default:"0" }}</span>
+          <span class="stat-label">Reviews</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ avg_rating|default:"—" }}{% if avg_rating %}★{% endif %}</span>
+          <span class="stat-label">Avg Rating</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Upcoming Sessions</h3>
+          <a href="{% url 'tutor:tutor_calendar' %}" class="btn btn-outline btn-sm">Full Calendar</a>
+        </div>
+        {% if upcoming_tutor_bookings %}
+          <div class="session-list">
+            {% for slot in upcoming_tutor_bookings %}
+            <div class="session-item">
+              <span class="session-time">{{ slot.start_time|date:"M d, H:i" }}</span>
+              <div class="session-info">
+                with <strong>{{ slot.booking.student.first_name|default:slot.booking.student.email }}</strong>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state" style="padding:1.5rem">
+            <p>No upcoming sessions booked yet.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+        <a href="{% url 'tutor:set_availability' %}" class="btn btn-primary">Set Availability</a>
+        <a href="{% url 'tutor:enter_tutor_subjects' %}" class="btn btn-secondary">Manage Subjects</a>
+        <a href="{% url 'tutor:tutor_page' %}" class="btn btn-secondary">Tutor Hub</a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ── Student Section ───────────────────────────────────────────────── -->
+    {% if student_profile %}
+    <div>
+      <h2 class="section-title">🎓 As a Student</h2>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-value">{{ student_subject_count|default:"0" }}</span>
+          <span class="stat-label">Subjects</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ upcoming_student_sessions.count|default:"0" }}</span>
+          <span class="stat-label">Upcoming</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Upcoming Sessions</h3>
+          <a href="{% url 'tutor:student_calendar' %}" class="btn btn-outline btn-sm">Full Calendar</a>
+        </div>
+        {% if upcoming_student_sessions %}
+          <div class="session-list">
+            {% for booking in upcoming_student_sessions %}
+            <div class="session-item">
+              <span class="session-time">{{ booking.slot.start_time|date:"M d, H:i" }}</span>
+              <div class="session-info">
+                with <strong>{{ booking.slot.tutor.user.first_name|default:booking.slot.tutor.user.email }}</strong>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state" style="padding:1.5rem">
+            <p>No upcoming sessions. Find a tutor to book one!</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+        <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-primary">Find Tutors</a>
+        <a href="{% url 'tutor:enter_subjects' %}" class="btn btn-secondary">Manage Subjects</a>
+        <a href="{% url 'tutor:student_page' %}" class="btn btn-secondary">Student Hub</a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ── No role yet ────────────────────────────────────────────────────── -->
+    {% if not tutor_profile and not student_profile %}
+    <div class="card" style="text-align:center">
+      <div class="empty-state">
+        <div class="empty-icon">👋</div>
+        <p>It looks like your profile isn't fully set up yet.</p>
+        <a href="{% url 'tutor:student_page' %}" class="btn btn-primary">Set Up Student Profile</a>
+        &nbsp;
+        <a href="{% url 'tutor:tutor_page' %}" class="btn btn-secondary">Set Up Tutor Profile</a>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

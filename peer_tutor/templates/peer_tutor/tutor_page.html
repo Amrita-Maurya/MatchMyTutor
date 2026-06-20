@@ -1,26 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tutor Page</title>
-    
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/tutor_page.css' %}"> 
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Tutor Hub{% endblock %}
 
-<div class="container">
-    <h2>Welcome Tutor</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>📚 Tutor Hub</h1>
+    <p>Manage your subjects, availability, and bookings.</p>
+  </div>
 
-    <p>Choose an option below to proceed:</p>
+  <div class="card">
+    <div class="card-header">
+      <h3>Your Subjects</h3>
+      <a href="{% url 'tutor:enter_tutor_subjects' %}" class="btn btn-outline btn-sm">+ Manage</a>
+    </div>
+    <div>
+      {% for subject in subjects %}
+        <span class="subject-tag">{{ subject.name }}</span>
+      {% empty %}
+        <p style="color:var(--text-muted);font-size:.875rem;">No subjects yet. Add subjects so students can find you.</p>
+      {% endfor %}
+    </div>
+  </div>
 
-    <ul>
-        <li><a href="{% url 'tutor:enter_tutor_subjects' %}">Enter Subjects You Can Teach</a></li>
-        <li><a href="{% url 'tutor:tutor_calendar' %}">Your Tutoring Calendar</a></li>
-        <li><a href="{% url 'tutor:set_availability' %}">Set Your Availability Slots</a></li>
-        <li><a href="{% url 'tutor:user_profile' %}">Back to Profile</a></li> 
-    </ul>
+  <div class="card">
+    <div class="card-header">
+      <h3>Recent Availability Slots</h3>
+      <a href="{% url 'tutor:set_availability' %}" class="btn btn-outline btn-sm">Manage All</a>
+    </div>
+    {% if availabilities %}
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Start</th><th>End</th></tr></thead>
+        <tbody>
+          {% for a in availabilities %}
+          <tr>
+            <td>{{ a.date }}</td>
+            <td>{{ a.start_time }}</td>
+            <td>{{ a.end_time }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p style="color:var(--text-muted);font-size:.875rem;">No availability set. Add slots so students can book you.</p>
+    {% endif %}
+  </div>
+
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:enter_tutor_subjects' %}" class="btn btn-primary">Manage Subjects</a>
+    <a href="{% url 'tutor:set_availability' %}" class="btn btn-primary">Set Availability</a>
+    <a href="{% url 'tutor:tutor_calendar' %}" class="btn btn-secondary">My Calendar</a>
+    <a href="{% url 'tutor:dashboard' %}" class="btn btn-secondary">← Dashboard</a>
+  </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

@@ -1,45 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Matching Tutors</title>
-    
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/matching_tutors.css' %}"> 
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Find Tutors{% endblock %}
 
-<h2>Matching Tutors</h2>
+{% block extra_css %}
+<style>
+  .filter-bar {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .filter-bar form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: flex-end;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    min-width: 160px;
+    flex: 1;
+  }
+  .filter-group label {
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--text-muted, #6b7280);
+  }
+  .filter-group input,
+  .filter-group select {
+    padding: .45rem .75rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--bg, #f9fafb);
+    color: var(--text, #111);
+  }
+  .filter-group input:focus,
+  .filter-group select:focus {
+    outline: none;
+    border-color: var(--primary, #6366f1);
+    box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+  }
+  .filter-actions {
+    display: flex;
+    gap: .5rem;
+    align-items: flex-end;
+    padding-bottom: 1px;
+  }
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: .75rem;
+  }
+  .filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: rgba(99,102,241,.1);
+    color: var(--primary, #6366f1);
+    border-radius: 999px;
+    padding: .2rem .7rem;
+    font-size: .78rem;
+    font-weight: 600;
+  }
+  .results-meta {
+    color: var(--text-muted, #6b7280);
+    font-size: .85rem;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
 
-{% if message %}
-    <div class="alert alert-info">
-        {{ message|join:", " }}
-    </div>
-{% endif %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>🔍 Find Tutors</h1>
+    <p>Tutors matched to your subjects — search, filter, and sort to find the right fit.</p>
+  </div>
 
-<div class="tutor-list">
-    {% for subject, tutors in subject_tutor_mapping.items %}
-        <h3>{{ subject }}</h3>
-        
-        {% if tutors %}
-            <ul>
-                {% for tutor in tutors %}
-                    <li class="tutor-card">
-                        <p class="tutor-name">{{ tutor.user.first_name }} </p>
-                        <a href="{% url 'tutor:availablility_calendar' tutor.id %}">Available Slots</a></p>
-                        <p><a href="{% url 'tutor:available_slots' tutor.id %}">Book Session</a></p>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No tutors available for this subject.</p>
+  <!-- ── Filter Bar ───────────────────────────────────────────────────────── -->
+  <div class="filter-bar">
+    <form method="get" action="">
+      <div class="filter-group">
+        <label for="search">Search name</label>
+        <input type="text" id="search" name="search" placeholder="Tutor name…"
+               value="{{ search }}">
+      </div>
+
+      <div class="filter-group">
+        <label for="subject">Subject</label>
+        <select id="subject" name="subject">
+          <option value="">All subjects</option>
+          {% for subj in all_subjects %}
+            <option value="{{ subj.name }}"
+              {% if subject_filter == subj.name %}selected{% endif %}>
+              {{ subj.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group" style="max-width:150px">
+        <label for="min_rating">Min rating</label>
+        <select id="min_rating" name="min_rating">
+          <option value="">Any</option>
+          {% for r in "2345" %}
+            <option value="{{ r }}" {% if min_rating == r %}selected{% endif %}>
+              {{ r }}+ ★
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group" style="max-width:160px">
+        <label for="ordering">Sort by</label>
+        <select id="ordering" name="ordering">
+          <option value="match"  {% if ordering == 'match'  or not ordering %}selected{% endif %}>Best match</option>
+          <option value="rating" {% if ordering == 'rating' %}selected{% endif %}>Highest rated</option>
+          <option value="reviews"{% if ordering == 'reviews'%}selected{% endif %}>Most reviews</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+        {% if search or subject_filter or min_rating %}
+          <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-outline btn-sm">Clear</a>
         {% endif %}
-    {% endfor %}
+      </div>
+    </form>
+
+    {% if search or subject_filter or min_rating %}
+    <div class="active-filters">
+      {% if search %}
+        <span class="filter-tag">🔤 "{{ search }}"</span>
+      {% endif %}
+      {% if subject_filter %}
+        <span class="filter-tag">📚 {{ subject_filter }}</span>
+      {% endif %}
+      {% if min_rating %}
+        <span class="filter-tag">⭐ {{ min_rating }}+</span>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ── Results ──────────────────────────────────────────────────────────── -->
+  {% if matching_tutors %}
+    <p class="results-meta">
+      Found <strong>{{ matching_tutors|length }}</strong> tutor{{ matching_tutors|length|pluralize }}
+      {% if search or subject_filter or min_rating %}matching your filters{% endif %}
+    </p>
+
+    <div class="tutor-grid">
+      {% for tutor in matching_tutors %}
+      <div class="tutor-card">
+        <div class="tutor-card-header">
+          <div class="tutor-avatar">{{ tutor.user.first_name|first|upper|default:"?" }}</div>
+          <div>
+            <h3>{{ tutor.user.get_full_name|default:tutor.user.email }}</h3>
+            {% if tutor.avg_rating %}
+              <div class="star-display">
+                {% with stars=tutor.avg_rating|floatformat:0 %}
+                  {% for i in "12345" %}{% if forloop.counter <= stars|add:"0" %}★{% else %}☆{% endif %}{% endfor %}
+                {% endwith %}
+                <span class="star-count">{{ tutor.avg_rating|floatformat:1 }} ({{ tutor.review_count }} review{{ tutor.review_count|pluralize }})</span>
+              </div>
+            {% else %}
+              <span style="color:var(--text-muted);font-size:.8rem;">No reviews yet</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="tutor-subjects">
+          {% for subject in tutor.subjects.all %}
+            <span class="subject-tag">{{ subject.name }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="tutor-card-actions">
+          <a href="{% url 'tutor:available_slots' tutor.id %}" class="btn btn-primary btn-sm">Book a Slot</a>
+          <a href="{% url 'tutor:tutor_profile' tutor.id %}" class="btn btn-outline btn-sm">View Profile</a>
+          <a href="{% url 'tutor:availablility_calendar' tutor.id %}" class="btn btn-outline btn-sm">Calendar</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div class="card">
+      <div class="empty-state">
+        <div class="empty-icon">🔎</div>
+        <h3>No tutors found</h3>
+        {% if search or subject_filter or min_rating %}
+          <p>No tutors match your current filters. Try broadening your search.</p>
+          <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-primary">Clear Filters</a>
+        {% else %}
+          <p>No tutors currently teach your subjects. Try adding more subjects or check back later.</p>
+          <a href="{% url 'tutor:enter_subjects' %}" class="btn btn-primary">Manage Subjects</a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 </div>
-
-<form action="{% url 'tutor:student_page' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
-
-</body>
-</html>
+{% endblock %}

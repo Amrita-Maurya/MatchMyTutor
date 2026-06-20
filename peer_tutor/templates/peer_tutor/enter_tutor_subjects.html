@@ -1,40 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Enter Subjects You Can Teach</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/enter_tutor_subjects.css' %}">
+{% extends 'peer_tutor/base.html' %}
+{% block title %}My Teaching Subjects{% endblock %}
 
-</head>
-<body>
-    <div class="container">
-        <h2>Subjects You Can Teach</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>Subjects You Can Teach</h1>
+    <p>Add subjects so students looking for help can find you.</p>
+  </div>
 
-    <form method="post", action="{% url 'tutor:enter_tutor_subjects' %}">
-        {% csrf_token %}
-        
-            <label for="new_subject">Add New Subject:</label>
-            <input type="text" id="new_subject" name="new_subject" required>
-        
-        <button type="submit">Add Subject</button>
+  <div class="card">
+    <form method="post" action="{% url 'tutor:enter_tutor_subjects' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_subject_name">Add a Subject</label>
+        <div style="display:flex;gap:.75rem;">
+          <input type="text" id="id_subject_name" name="subject_name" class="form-control"
+                 placeholder="e.g. Mathematics, Python, Physics"
+                 value="{{ form.subject_name.value|default:'' }}" autocomplete="off">
+          <button type="submit" class="btn btn-primary" style="white-space:nowrap">+ Add</button>
+        </div>
+        {% if form.subject_name.errors %}
+          <span class="form-error">{{ form.subject_name.errors.0 }}</span>
+        {% endif %}
+      </div>
     </form>
+  </div>
 
-    <h3>Your Subjects:</h3>
-    {% if subjects_list %}
-        <ul>
-            {% for subject in subjects_list %}
-                <li>{{ subject }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No subjects entered yet.</p>
-    {% endif %}
-    <form action="{% url 'tutor:tutor_page' %}" method="get">
-        <button type="submit" class="back-button">Back</button>
-    </form>
+  <div class="card">
+    <div class="card-header"><h3>Your Teaching Subjects</h3></div>
+    <div>
+      {% for subject in subjects %}
+        <span class="subject-tag">
+          {{ subject.name }}
+          <form method="post" action="{% url 'tutor:remove_tutor_subject' subject.id %}">
+            {% csrf_token %}
+            <button type="submit" title="Remove">×</button>
+          </form>
+        </span>
+      {% empty %}
+        <div class="empty-state" style="padding:1.5rem">
+          <div class="empty-icon">📖</div>
+          <p>No subjects yet. Students won't find you until you add some.</p>
+        </div>
+      {% endfor %}
     </div>
-</div>
+  </div>
 
-</body>
-</html>
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:set_availability' %}" class="btn btn-primary">Set Availability →</a>
+    <a href="{% url 'tutor:tutor_page' %}" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MatchMyTutor{% endblock %} — MatchMyTutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="{% static 'peer_tutor/global.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="{% url 'tutor:home' %}" class="navbar-brand">🎓 MatchMyTutor</a>
+
+    <ul class="navbar-nav" id="mainNav">
+      {% if request.user.is_authenticated %}
+        <li><a href="{% url 'tutor:dashboard' %}" class="nav-link">Dashboard</a></li>
+
+        {% if is_tutor %}
+          <div class="nav-divider"></div>
+          <li><a href="{% url 'tutor:tutor_page' %}" class="nav-link">Tutor Hub</a></li>
+          <li><a href="{% url 'tutor:set_availability' %}" class="nav-link">Availability</a></li>
+          <li><a href="{% url 'tutor:tutor_calendar' %}" class="nav-link">My Schedule</a></li>
+        {% endif %}
+
+        {% if is_student %}
+          <div class="nav-divider"></div>
+          <li><a href="{% url 'tutor:student_page' %}" class="nav-link">Student Hub</a></li>
+          <li><a href="{% url 'tutor:matching_tutors' %}" class="nav-link">Find Tutors</a></li>
+          <li><a href="{% url 'tutor:student_calendar' %}" class="nav-link">My Sessions</a></li>
+        {% endif %}
+      {% else %}
+        <li><a href="{% url 'tutor:home' %}" class="nav-link">Home</a></li>
+      {% endif %}
+    </ul>
+
+    <div class="navbar-user">
+      {% if request.user.is_authenticated %}
+        <span class="navbar-user-name" id="notifBell" title="Notifications" style="cursor:pointer;">
+          👋 {{ request.user.first_name|default:request.user.email }}
+          <span id="notifDot" style="display:none;background:#ef4444;border-radius:50%;
+            width:8px;height:8px;display:inline-block;margin-left:4px;vertical-align:middle;"></span>
+        </span>
+        <form method="post" action="{% url 'tutor:logout' %}" style="margin:0">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,.4);">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'tutor:login' %}" class="nav-link">Login</a>
+        <a href="{% url 'tutor:signup' %}" class="btn btn-primary btn-sm">Sign Up</a>
+      {% endif %}
+    </div>
+
+    <button class="navbar-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Flash Messages ──────────────────────────────────────────────────────── -->
+{% if messages %}
+<div class="messages-container">
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+      {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ── WebSocket Notification Toast ────────────────────────────────────────── -->
+<div id="wsToast" style="
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
+  background:#1e293b;color:#f1f5f9;
+  border-radius:12px;padding:1rem 1.25rem;
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+  max-width:320px;font-size:.9rem;
+  transform:translateY(120%);opacity:0;
+  transition:transform .3s ease,opacity .3s ease;
+  pointer-events:none;
+"></div>
+
+<!-- ── Main Content ─────────────────────────────────────────────────────────── -->
+<main class="page-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <p>&copy; 2024 MatchMyTutor — Built with Django, DRF &amp; Channels</p>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('mainNav').classList.toggle('open');
+  });
+</script>
+
+{% if request.user.is_authenticated %}
+<script>
+(function () {
+  var toast = document.getElementById('wsToast');
+  var dot   = document.getElementById('notifDot');
+  var timer = null;
+
+  function showToast(icon, msg) {
+    clearTimeout(timer);
+    toast.innerHTML = icon + ' <strong style="display:block;margin-bottom:.2rem;">New notification</strong>' + msg;
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity   = '1';
+    toast.style.pointerEvents = 'auto';
+    dot.style.display = 'inline-block';
+    timer = setTimeout(function () {
+      toast.style.transform = 'translateY(120%)';
+      toast.style.opacity   = '0';
+      toast.style.pointerEvents = 'none';
+    }, 6000);
+  }
+
+  var proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  var ws = new WebSocket(proto + '//' + location.host + '/ws/notifications/');
+  var reconnectDelay = 2000;
+
+  ws.onopen = function () {
+    reconnectDelay = 2000;
+  };
+
+  ws.onmessage = function (e) {
+    try {
+      var data = JSON.parse(e.data);
+      if (data.type === 'connected' || data.type === 'pong') return;
+      var icons = { booking_created: '📅', booking_cancelled: '❌', notification: '🔔' };
+      var icon  = icons[data.type] || icons.notification;
+      showToast(icon, data.message || 'You have a new notification.');
+    } catch (_) {}
+  };
+
+  ws.onerror = function () {};
+
+  ws.onclose = function (e) {
+    if (e.code === 4001) return;
+    setTimeout(function () {
+      reconnectDelay = Math.min(reconnectDelay * 1.5, 30000);
+    }, reconnectDelay);
+  };
+
+  toast.addEventListener('click', function () {
+    toast.style.transform = 'translateY(120%)';
+    toast.style.opacity   = '0';
+    toast.style.pointerEvents = 'none';
+    dot.style.display = 'none';
+  });
+})();
+</script>
+{% endif %}
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

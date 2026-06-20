@@ -1,26 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Student Page</title>
-    
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/student_page.css' %}"> 
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Student Hub{% endblock %}
 
-<div class="container">
-    <h2>Welcome Student</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>🎓 Student Hub</h1>
+    <p>Find tutors, manage your subjects, and track your sessions.</p>
+  </div>
 
-    <ul>
-        <li><a href="{% url 'tutor:enter_subjects' %}">Enter Subjects You Need Help In</a></li>
-        <li><a href="{% url 'tutor:matching_tutors' %}">Tutors Who Can Help You</a></li>
-        <li><a href="{% url 'tutor:student_calendar' %}">Your Student Calendar</a></li>
-        <li><a href="{% url 'tutor:user_profile' %}">Go to Your Profile</a></li>
-    </ul>
+  <div class="card">
+    <div class="card-header">
+      <h3>Your Subjects</h3>
+      <a href="{% url 'tutor:enter_subjects' %}" class="btn btn-outline btn-sm">+ Manage</a>
+    </div>
+    <div>
+      {% for subject in subjects %}
+        <span class="subject-tag">{{ subject.name }}</span>
+      {% empty %}
+        <p style="color:var(--text-muted);font-size:.875rem;">No subjects yet. Add the subjects you need help with.</p>
+      {% endfor %}
+    </div>
+  </div>
 
-    
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:enter_subjects' %}" class="btn btn-primary">Manage Subjects</a>
+    <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-primary">Find Tutors</a>
+    <a href="{% url 'tutor:student_calendar' %}" class="btn btn-secondary">My Sessions</a>
+    <a href="{% url 'tutor:dashboard' %}" class="btn btn-secondary">← Dashboard</a>
+  </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

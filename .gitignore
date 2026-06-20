@@ -1,10 +1,58 @@
-# Python-generated files
+# ── Python ─────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[oc]
+*.pyo
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
+.eggs/
 
-# Virtual environments
-.venv
+# ── Virtual environments ────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.pythonlibs/
+
+# ── Django ─────────────────────────────────────────────────────────────────────
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+mediafiles/
+
+# ── Environment / secrets ───────────────────────────────────────────────────────
+# NEVER commit .env — it contains SECRET_KEY, passwords, database credentials
+.env
+.env.local
+.env.*.local
+
+# ── uv / pip ────────────────────────────────────────────────────────────────────
+# uv.lock can be committed if you want reproducible installs across machines.
+# Remove this line to track it in Git.
+# uv.lock
+
+# ── OS files ────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor files ────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Testing ─────────────────────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ── Replit internals ────────────────────────────────────────────────────────────
+.replit
+replit.nix
+.upm/
+.config/

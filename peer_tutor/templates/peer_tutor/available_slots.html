@@ -1,43 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Available Slots for {{ tutor.name }}</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/student_calendar.css' %}">
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Book a Session{% endblock %}
 
-<h2>Available Slots for {{ tutor.user.first_name }}</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>📅 Available Slots</h1>
+    <p>
+      Book a session with
+      <strong>{{ tutor.user.get_full_name|default:tutor.user.email }}</strong>
+    </p>
+  </div>
 
-<table border="1">
-    <tr>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Action</th>
-    </tr>
-    
-    {% for slot in available_slots %}
-        <tr>
-            <td>{{ slot.start_time }}</td>
-            <td>{{ slot.end_time }}</td>
-            <td>
-                <form action="{% url 'tutor:book_slot' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="start_time" value="{{ slot.start_time.isoformat }}">
-                    <input type="hidden" name="end_time" value="{{ slot.end_time.isoformat }}">
-                    <button type="submit">Book Slot</button>
-                </form>
-            </td>
-        </tr>
-    {% empty %}
-        <tr><td colspan="3">No available slots.</td></tr>
-    {% endfor %}
-</table>
+  {% if available_slots %}
+    <div class="slots-grid">
+      {% for slot in available_slots %}
+      <div class="slot-card">
+        <div class="slot-date">{{ slot.start_time|date:"l, M j, Y" }}</div>
+        <div class="slot-time">
+          {{ slot.start_time|date:"H:i" }} — {{ slot.end_time|date:"H:i" }}
+        </div>
+        <form method="post" action="{% url 'tutor:book_slot' %}">
+          {% csrf_token %}
+          <input type="hidden" name="slot_id" value="{{ slot.id }}">
+          <button type="submit" class="btn btn-primary btn-sm btn-block">
+            Confirm Booking
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card">
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3>No open slots</h3>
+        <p>{{ tutor.user.first_name|default:"This tutor" }} has no upcoming availability right now. Check back later!</p>
+      </div>
+    </div>
+  {% endif %}
 
-<form action="{% url 'tutor:matching_tutors' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
-
-</body>
-</html>
+  <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:tutor_profile' tutor.id %}" class="btn btn-outline">View Profile</a>
+    <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-secondary">← Back to Tutors</a>
+  </div>
+</div>
+{% endblock %}

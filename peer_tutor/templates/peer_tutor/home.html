@@ -1,42 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    {% load static %}
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Welcome{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'peer_tutor/home.css' %}">
-</head>
-<body>
-    
-<div class="welcome">
-    <h1>Welcome to Peer Tutor Matching</h1>
-    <p>Find the perfect peer tutor to enhance your learning experience!</p>
-    <a href="{% url 'tutor:signup' %}" class="btn">Get Started</a>
+{% block content %}
+<div class="hero">
+  <h1>Find Your Perfect Peer Tutor</h1>
+  <p>Connect with knowledgeable peers, schedule sessions, and accelerate your learning.</p>
+  <a href="{% url 'tutor:signup' %}" class="btn btn-primary btn-lg">Get Started Free</a>
+  &nbsp;
+  <a href="{% url 'tutor:login' %}" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.5);">Log In</a>
 </div>
 
-<div class="features">
-    <h2>Why Choose Us?</h2>
-    <div class="feature">
-        <h3>Personalized Matching</h3>
-        <p>We match you with tutors based on your specific needs and subjects.</p>
+<section class="features-section">
+  <h2>Why Choose MatchMyTutor?</h2>
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feat-icon">🎯</div>
+      <h3>Smart Matching</h3>
+      <p>We match you with tutors based on the exact subjects you need, sorted by relevance and rating.</p>
     </div>
-    <div class="feature">
-        <h3>Flexible Scheduling</h3>
-        <p>Choose times that work best for you and your tutor.</p>
+    <div class="feature-item">
+      <div class="feat-icon">📅</div>
+      <h3>Flexible Scheduling</h3>
+      <p>Tutors set their own availability. Book open slots in a few clicks — no back-and-forth emails.</p>
     </div>
-    <div class="feature">
-        <h3>Friendly Tutors</h3>
-        <p>Get to learn from your peers involving a friendly and supportive learning experience.</p>
+    <div class="feature-item">
+      <div class="feat-icon">⭐</div>
+      <h3>Reviews & Ratings</h3>
+      <p>Read honest reviews from students who have already had sessions, so you can choose with confidence.</p>
     </div>
-</div>
-
-<footer>
-    <p>&copy; 2024 Peer Tutor Matching System | All Rights Reserved</p>
-</footer>
-
-
-    
-</body>
-</html>
+    <div class="feature-item">
+      <div class="feat-icon">🔄</div>
+      <h3>Be Both</h3>
+      <p>Teach what you know while learning what you don't — one account, two roles.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

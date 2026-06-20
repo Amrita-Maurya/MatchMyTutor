@@ -1,0 +1,88 @@
+{% extends 'peer_tutor/base.html' %}
+{% block title %}{{ tutor.user.get_full_name|default:tutor.user.email }}{% endblock %}
+
+{% block content %}
+<div class="container-md">
+
+  <!-- ── Profile Header ───────────────────────────────────────────────────── -->
+  <div class="profile-header card">
+    <div class="tutor-avatar tutor-avatar-lg">
+      {{ tutor.user.first_name|first|upper|default:"?" }}
+    </div>
+    <div class="profile-info">
+      <h1>{{ tutor.user.get_full_name|default:tutor.user.email }}</h1>
+
+      {% if avg_rating %}
+        <div class="star-display star-display-lg">
+          {% for i in star_range %}
+            {% if i <= avg_rating %}★{% else %}☆{% endif %}
+          {% endfor %}
+          <span class="star-count">{{ avg_rating }} / 5.0 ({{ reviews.count }} review{{ reviews.count|pluralize }})</span>
+        </div>
+      {% else %}
+        <p style="color:var(--text-muted);">No reviews yet</p>
+      {% endif %}
+
+      <div class="tutor-subjects" style="margin-top:.75rem;">
+        {% for subject in tutor.subjects.all %}
+          <span class="subject-tag">{{ subject.name }}</span>
+        {% empty %}
+          <span style="color:var(--text-muted);font-size:.875rem;">No subjects listed</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Actions ──────────────────────────────────────────────────────────── -->
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+    <a href="{% url 'tutor:available_slots' tutor.id %}" class="btn btn-primary">📅 Book a Session</a>
+    <a href="{% url 'tutor:availablility_calendar' tutor.id %}" class="btn btn-outline">View Availability</a>
+    {% if has_session and not has_reviewed %}
+      <a href="{% url 'tutor:add_review' tutor.id %}" class="btn btn-secondary">⭐ Leave a Review</a>
+    {% elif has_reviewed %}
+      <a href="{% url 'tutor:add_review' tutor.id %}" class="btn btn-secondary">✏️ Edit My Review</a>
+    {% endif %}
+    <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-secondary">← Back to Tutors</a>
+  </div>
+
+  <!-- ── Reviews ──────────────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Student Reviews</h3>
+      {% if not has_session %}
+        <span style="color:var(--text-muted);font-size:.8rem;">Book a session to leave a review</span>
+      {% endif %}
+    </div>
+
+    {% if reviews %}
+      <div class="review-list">
+        {% for review in reviews %}
+        <div class="review-item">
+          <div class="review-header">
+            <span class="review-author">
+              {{ review.student.first_name|default:review.student.email }}
+            </span>
+            <span class="review-stars">
+              {% for i in star_range %}
+                {% if i <= review.rating %}★{% else %}☆{% endif %}
+              {% endfor %}
+              {{ review.rating }}/5
+            </span>
+            <span class="review-date">{{ review.created_at|date:"M j, Y" }}</span>
+          </div>
+          {% if review.comment %}
+            <p class="review-body">{{ review.comment }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state" style="padding:1.5rem">
+        <div class="empty-icon">⭐</div>
+        <p>No reviews yet. Be the first to review {{ tutor.user.first_name|default:"this tutor" }}!</p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

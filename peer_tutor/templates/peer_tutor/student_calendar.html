@@ -1,22 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Your Study Sessions Calendar</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/student_calendar.css' %}">
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}My Sessions{% endblock %}
 
-<h2>Your Study Sessions Calendar</h2>
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>📆 My Study Sessions</h1>
+    <p>All your booked tutoring sessions in one view.</p>
+  </div>
 
-<div>
-    {{ calendar|safe }}  
+  <div class="card">
+    <div class="calendar-container">
+      {{ calendar|safe }}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Upcoming Bookings</h3>
+    </div>
+    {% if upcoming_bookings %}
+      <div class="session-list">
+        {% for booking in upcoming_bookings %}
+        <div class="session-item">
+          <span class="session-time">
+            {{ booking.slot.start_time|date:"M j, H:i" }} — {{ booking.slot.end_time|date:"H:i" }}
+          </span>
+          <div class="session-info">
+            with <strong>{{ booking.slot.tutor.user.first_name|default:booking.slot.tutor.user.email }}</strong>
+          </div>
+          <div style="display:flex;gap:.5rem;align-items:center;">
+            <a href="{% url 'tutor:tutor_profile' booking.slot.tutor.id %}" class="btn btn-outline btn-sm">Profile</a>
+            <form method="post" action="{% url 'tutor:cancel_booking' booking.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm"
+                      style="background:var(--error);color:#fff;padding:.25rem .6rem"
+                      onclick="return confirm('Cancel this booking?')">Cancel</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state" style="padding:1.5rem">
+        <p>No upcoming sessions. Find a tutor and book one!</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-primary">Find Tutors</a>
+    <a href="{% url 'tutor:student_page' %}" class="btn btn-secondary">← Student Hub</a>
+  </div>
 </div>
-
-<form action="{% url 'tutor:student_page' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
-
-</body>
-</html>
+{% endblock %}

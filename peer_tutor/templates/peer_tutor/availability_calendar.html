@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ tutor.user.first_name }}'s Availability Calendar</title>
-    
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/availability_calendar.css' %}">
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}{{ tutor.user.first_name }}'s Calendar{% endblock %}
 
-<h2>{{ tutor.user.first_name }}'s Availability Calendar</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>📆 {{ tutor.user.get_full_name|default:tutor.user.email }}'s Availability</h1>
+    <p>Green dates have open slots available for booking.</p>
+  </div>
 
-<div>
-    {{ calendar|safe }}  
+  <div class="card">
+    <div class="calendar-container">
+      {{ calendar|safe }}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;">
+    <a href="{% url 'tutor:available_slots' tutor.id %}" class="btn btn-primary">Book a Slot</a>
+    <a href="{% url 'tutor:tutor_profile' tutor.id %}" class="btn btn-outline">View Profile</a>
+    <a href="{% url 'tutor:matching_tutors' %}" class="btn btn-secondary">← Back to Tutors</a>
+  </div>
 </div>
-
-<form action="{% url 'tutor:matching_tutors' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
-
-</body>
-</html>
+{% endblock %}

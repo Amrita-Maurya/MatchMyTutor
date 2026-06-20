@@ -1,43 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Set Availability</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/set_availability.css' %}">
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Set Availability{% endblock %}
 
-<h2>Set Your Availability</h2>
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <h1>📅 Set Your Availability</h1>
+    <p>Add time slots when you're available to tutor. Students can then book these slots.</p>
+  </div>
 
-<form method="post", action="{% url 'tutor:set_availability' %}">
-    {% csrf_token %}
-    <label for="date">Date:</label>
-    <input type="date" name="date" id="date" required><br>
+  <div class="card">
+    <form method="post" action="{% url 'tutor:set_availability' %}">
+      {% csrf_token %}
 
-    
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.date.id_for_label }}">Date</label>
+          <input type="date" id="{{ form.date.id_for_label }}" name="date"
+                 class="form-control" value="{{ form.date.value|default:'' }}" required>
+          {% if form.date.errors %}
+            <span class="form-error">{{ form.date.errors.0 }}</span>
+          {% endif %}
+        </div>
 
-    <label for="start_time">Start Time:</label>
-    <input type="time" name="start_time" id="start_time" required><br>
+        <div class="form-group">
+          <label for="{{ form.start_time.id_for_label }}">Start Time</label>
+          <input type="time" id="{{ form.start_time.id_for_label }}" name="start_time"
+                 class="form-control" value="{{ form.start_time.value|default:'' }}" required>
+          {% if form.start_time.errors %}
+            <span class="form-error">{{ form.start_time.errors.0 }}</span>
+          {% endif %}
+        </div>
 
-    <label for="end_time">End Time:</label>
-    <input type="time" name="end_time" id="end_time" required><br>
+        <div class="form-group">
+          <label for="{{ form.end_time.id_for_label }}">End Time</label>
+          <input type="time" id="{{ form.end_time.id_for_label }}" name="end_time"
+                 class="form-control" value="{{ form.end_time.value|default:'' }}" required>
+          {% if form.end_time.errors %}
+            <span class="form-error">{{ form.end_time.errors.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
 
-    <button type="submit">Save Availability</button>
-</form>
+      {% if form.non_field_errors %}
+        <ul class="errorlist">
+          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
 
-<h3>Your Current Availability:</h3>
-<ul>
-    {% for availability in availabilities %}
-        <li>{{ availability.date }}: {{ availability.start_time }} to {{ availability.end_time }}</li>
-    {% empty %}
-        <li>No availability set.</li>
-    {% endfor %}
-</ul>
+      <button type="submit" class="btn btn-primary">+ Add Availability</button>
+    </form>
+  </div>
 
-<form action="{% url 'tutor:tutor_page' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
+  <div class="card">
+    <div class="card-header">
+      <h3>Your Scheduled Slots</h3>
+    </div>
+    {% if availabilities %}
+      <table class="data-table">
+        <thead>
+          <tr><th>Date</th><th>Start</th><th>End</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          {% for avail in availabilities %}
+          <tr>
+            <td>{{ avail.date|date:"M j, Y" }}</td>
+            <td>{{ avail.start_time }}</td>
+            <td>{{ avail.end_time }}</td>
+            <td>
+              <form method="post" action="{% url 'tutor:delete_availability' avail.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm"
+                        style="background:var(--error);color:#fff;padding:.2rem .6rem"
+                        onclick="return confirm('Remove this slot?')">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state" style="padding:1.5rem">
+        <p>No availability slots yet. Add one above to start getting bookings.</p>
+      </div>
+    {% endif %}
+  </div>
 
-</body>
-</html>
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:tutor_calendar' %}" class="btn btn-outline">View Calendar</a>
+    <a href="{% url 'tutor:tutor_page' %}" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,22 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Booked Slots Calendar</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/tutor_calendar.css' %}">
-</head>
-<body>
+{% extends 'peer_tutor/base.html' %}
+{% block title %}My Schedule{% endblock %}
 
-<h2>Booked Slots Calendar</h2>
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>📆 My Teaching Schedule</h1>
+    <p>All your booked and upcoming sessions in one view.</p>
+  </div>
 
-<div>
-    {{ calendar|safe }}  
+  <div class="card">
+    <div class="calendar-container">
+      {{ calendar|safe }}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Upcoming Sessions</h3>
+    </div>
+    {% if upcoming_slots %}
+      <div class="session-list">
+        {% for slot in upcoming_slots %}
+        <div class="session-item">
+          <span class="session-time">{{ slot.start_time|date:"M j, H:i" }} — {{ slot.end_time|date:"H:i" }}</span>
+          <div class="session-info">
+            <strong>
+              {% if slot.booking %}
+                {{ slot.booking.student.first_name|default:slot.booking.student.email }}
+              {% else %}
+                Booked
+              {% endif %}
+            </strong>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state" style="padding:1.5rem">
+        <p>No upcoming sessions. Set your availability so students can book you.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <a href="{% url 'tutor:set_availability' %}" class="btn btn-primary">Add Availability</a>
+    <a href="{% url 'tutor:tutor_page' %}" class="btn btn-secondary">← Tutor Hub</a>
+  </div>
 </div>
-
-<form action="{% url 'tutor:tutor_page' %}" method="get">
-    <button type="submit" class="back-button">Back</button>
-</form>
-
-</body>
-</html>
+{% endblock %}

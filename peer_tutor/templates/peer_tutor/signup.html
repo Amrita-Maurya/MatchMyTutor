@@ -1,35 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'peer_tutor/signup.css' %}">
+{% extends 'peer_tutor/base.html' %}
+{% block title %}Sign Up{% endblock %}
 
-</head>
-<body>
-    <h2>Sign Up</h2>
-    {% if messages %}
-          {% for message in messages %}
-              <p>{{ message }}</p>
-          {% endfor %}
-    {% endif %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="max-width:540px">
+    <h1>Create your account</h1>
+    <p class="auth-subtitle">Join MatchMyTutor — it's free</p>
+
     <form method="post" action="{% url 'tutor:signup' %}">
-        {% csrf_token %}
-        
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        
-        <button type="submit" class="btn">Create Account</button>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <ul class="errorlist">
+          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="id_name">Full Name</label>
+        <input type="text" id="id_name" name="name" class="form-control"
+               placeholder="Your full name" value="{{ form.name.value|default:'' }}"
+               autocomplete="name" required>
+        {% if form.name.errors %}
+          <span class="form-error">{{ form.name.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_email">Email Address</label>
+        <input type="email" id="id_email" name="email" class="form-control"
+               placeholder="you@example.com" value="{{ form.email.value|default:'' }}"
+               autocomplete="email" required>
+        {% if form.email.errors %}
+          <span class="form-error">{{ form.email.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_password">Password</label>
+        <input type="password" id="id_password" name="password" class="form-control"
+               placeholder="Minimum 8 characters" autocomplete="new-password" required>
+        {% if form.password.errors %}
+          <span class="form-error">{{ form.password.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_confirm_password">Confirm Password</label>
+        <input type="password" id="id_confirm_password" name="confirm_password"
+               class="form-control" placeholder="Repeat your password"
+               autocomplete="new-password" required>
+        {% if form.confirm_password.errors %}
+          <span class="form-error">{{ form.confirm_password.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label>I am signing up as</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="role" value="student"
+              {% if form.role.value == 'student' or not form.role.value %}checked{% endif %}>
+            🎓 <strong>Student</strong> — I want to find tutors
+          </label>
+          <label>
+            <input type="radio" name="role" value="tutor"
+              {% if form.role.value == 'tutor' %}checked{% endif %}>
+            📚 <strong>Tutor</strong> — I want to offer tutoring
+          </label>
+          <label>
+            <input type="radio" name="role" value="both"
+              {% if form.role.value == 'both' %}checked{% endif %}>
+            🔄 <strong>Both</strong> — I want to do both
+          </label>
+        </div>
+        {% if form.role.errors %}
+          <span class="form-error">{{ form.role.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
     </form>
-    <p>Already have an account? <a href="{% url 'tutor:login' %}">Login here</a></p>
-    
-</body>
-</html>
+
+    <p class="auth-footer-link">
+      Already have an account? <a href="{% url 'tutor:login' %}">Log in here</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
